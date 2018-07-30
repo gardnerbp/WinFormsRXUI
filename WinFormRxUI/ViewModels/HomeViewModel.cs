@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using ReactiveUI;
 
+
 /// <summary>
 /// ViewModel Example
 /// </summary>
@@ -27,13 +28,12 @@ namespace WinFormRxUI.ViewModels
             set { this.RaiseAndSetIfChanged(ref statusString, value); }
         }
 
-        public ReactiveCommand<object> OKCmd { get; private set; }
+        public ReactiveCommand OKCmd { get; private set; }
 
         public HomeViewModel()
         {
-            var OKCmdObs = this.WhenAny(vm => vm.EnteredText, s => !string.IsNullOrWhiteSpace(s.Value));
-            OKCmd = ReactiveCommand.Create(OKCmdObs);
-            OKCmd.Subscribe(_ => Status = EnteredText + " is saved.");
+            OKCmd = ReactiveCommand.Create(() => { Status = EnteredText + " is saved."; }
+                , this.WhenAny(vm => vm.EnteredText, s => !string.IsNullOrWhiteSpace(s.Value)));
         }
     }
 }
